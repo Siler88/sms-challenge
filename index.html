@@ -14,10 +14,10 @@
         <div class="loginwindow">
                 <h2>Create new account</h2>
                 <form name="form" id="form">
-                    <input class="input" type="text" placeholder="name" pattern=".{8,}" required title="your name must be at least 8 characters long">
+                    <input class="input" type="text" placeholder="name" pattern=".{5,}"  title="your name must be at least 5 characters long">
                     <input id="email"  class="input" type="email" placeholder="email">
                     <input id="confirmEmail" class="input" type="email" placeholder="confirm email">
-                    <input  id= "password"class="input" type="password"  placeholder="password">
+                    <input  id= "password"class="input" type="password"  placeholder="password" pattern=".{8,}"  title="your password must be at least 8 characters long">
                     <input id="confirmpassword" class="input"  type="password" placeholder="confirm password">
                     <span><input type="checkbox" onclick="show()">Show Password</span>
                     <input id="button" class="input" type="submit">

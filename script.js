@@ -5,7 +5,7 @@ var order = "normal"; //reverse
 var startDate = 1306886400000;
 var endDate = 1557619200000;
 // load JSON
-
+//json parsen und laden
 function loadJSON(callback) {   
     var xobj = new XMLHttpRequest();
     xobj.overrideMimeType("application/json");
@@ -24,7 +24,7 @@ function echoJson(data){
     getJsonRange(); 
     inputContent();
 } 
-
+// start und enddatum prüfen und speichern
 function setjsonRange(e){
     if (e.preventDefault) e.preventDefault();
         startDate = Date.parse(document.getElementById("startdate").value);
@@ -37,6 +37,7 @@ function setjsonRange(e){
         console.log(startDate, endDate)
     return false;
 }
+// datum eingaben verarbeiten
 function getJsonRange(){
     var form = document.getElementById('rangeform');
     if (form.attachEvent) {
@@ -45,6 +46,7 @@ function getJsonRange(){
         form.addEventListener("submit", setjsonRange);
     }
 }
+//array auf basis der datums-range erstellen
 function buildJsonByRange(){
     mJson=[];
     originalJson.forEach(function(e){
@@ -59,6 +61,9 @@ function inputContent(){
     buildJsonByRange();
     let myJson = getMyJson();
     cleanDom();
+    if(myJson.length===0){
+        window.alert("sorry we didn't found any entry in the given date range")
+    }
     myJson.forEach(element => {
         let cityName = element.city;
         let startDate = element.start_date;
@@ -104,6 +109,7 @@ function inputContent(){
 
     });
 }
+//funktion zum löschen der einträge
 function cleanDom(){
     let maincontainer = document.getElementById("maincontainer");
     if (maincontainer.hasChildNodes){
@@ -113,7 +119,7 @@ function cleanDom(){
     }
     else{ return }
 }
-
+//hier wird ein neuer array erstellt und die sortierungseinstellungen verarbeitet
 function getMyJson(){   // sortierung vornehmen
     let myJson=[];
     let newOrder = [];
@@ -246,15 +252,16 @@ function getMyJson(){   // sortierung vornehmen
             newOrder.push(e.status);
         });
         newOrder.sort();
-        
         let n=0;
         for(let i=0; myJson.length<mJson.length; i++){
-            if(i>mJson.length-1){i=0;}
-            if(mJson[i].status==newOrder[n]){
-                n++;
-                myJson.push(mJson[i]);
-                if(myJson.length<mJson.length){
-                i=0;}
+            if(!myJson.includes(mJson[i])){
+                if(i>mJson.length-1){i=0;}
+                if(mJson[i].status==newOrder[n]){
+                    n++;
+                    myJson.push(mJson[i]);
+                    if(myJson.length<mJson.length){
+                    i=0;}
+                }
             }
         }
         if(order=="normal"){
@@ -288,22 +295,24 @@ function getMyJson(){   // sortierung vornehmen
         }
     }
 }
-function whoAmI(e){
-    console.log(e.target.id);
+function whoAmI(e){ // herausfinden auf welche spalte geklickt wurde
     if(sort === e.target.id){
-        console.log("gotit")
         if(order=== "reverse"){
-            console.log("von reverse nach normal")
             order= "normal";
         }
         else {
             order = "reverse"; 
-            console.log("von normal nach reverse")
         }
     }
     else{ sort = e.target.id; }
+    //farben wechseln um zu kennzeichnen welche spalte sortiert wurde
+    for(let i=0; i<document.getElementsByClassName("headerline").length; i++){
+        document.getElementsByClassName("headerline")[i].style.backgroundColor= "#0075be";
+    }
+    if(order==="reverse"){e.target.style.backgroundColor = "red";}
+    if(order==="normal"){e.target.style.backgroundColor = "#00ffff";}
+    
     inputContent();
-    console.log(order);
 }
 
 
