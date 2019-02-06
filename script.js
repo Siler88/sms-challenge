@@ -1,12 +1,12 @@
-var mJson;
-var jsonUsers;
-var popup = false;
+var mJson=[];
+var originalJson;
 var sort = "city"; //sortierung
 var order = "normal"; //reverse
+var startDate = 1306886400000;
+var endDate = 1557619200000;
 // load JSON
 
 function loadJSON(callback) {   
-
     var xobj = new XMLHttpRequest();
     xobj.overrideMimeType("application/json");
     xobj.open('GET', './data.json', true); 
@@ -20,12 +20,43 @@ function loadJSON(callback) {
  loadJSON(echoJson)
 
 function echoJson(data){
-    mJson = JSON.parse(data);   
+    originalJson = JSON.parse(data);  
+    getJsonRange(); 
     inputContent();
 } 
 
+function setjsonRange(e){
+    if (e.preventDefault) e.preventDefault();
+        startDate = Date.parse(document.getElementById("startdate").value);
+        endDate = Date.parse(document.getElementById("enddate").value);
+        if(endDate<startDate){
+            endDate=startDate;
+            window.alert("Das Enddatum kann nicht kleiner als das Startdatum sein. Deshalb wurde automatisch das Enddatum dem Startdatum gleichgesetzt.")
+        }
+        inputContent();
+        console.log(startDate, endDate)
+    return false;
+}
+function getJsonRange(){
+    var form = document.getElementById('rangeform');
+    if (form.attachEvent) {
+        form.attachEvent("submit", setjsonRange);
+    } else {
+        form.addEventListener("submit", setjsonRange);
+    }
+}
+function buildJsonByRange(){
+    mJson=[];
+    originalJson.forEach(function(e){
+        if(Date.parse(e.start_date)>=startDate && Date.parse(e.end_date)<=endDate){
+            mJson.push(e);
+        }
+    });
+
+}
 // inputt informations 
 function inputContent(){
+    buildJsonByRange();
     let myJson = getMyJson();
     cleanDom();
     myJson.forEach(element => {
@@ -69,6 +100,7 @@ function inputContent(){
         colorDiv.className = "subline";  // username einfuegen
         cont.appendChild(colorDiv);
         colorDiv.innerHTML = color;
+        colorDiv.style.backgroundColor = color;
 
     });
 }
@@ -163,7 +195,7 @@ function getMyJson(){   // sortierung vornehmen
             return(myJson);
         }
     }
-    if(sort==="city"){
+    if(sort==="city"){  //nach stadt sortieren
         mJson.forEach(function(e){
             newOrder.push(e.city);
         });
@@ -186,7 +218,7 @@ function getMyJson(){   // sortierung vornehmen
             return(myJson);
         }
     }
-    if(sort==="price"){
+    if(sort==="price"){     // nach preis sortieren
         mJson.forEach(function(e){
             newOrder.push(e.price);
         });
@@ -209,7 +241,7 @@ function getMyJson(){   // sortierung vornehmen
             return(myJson);
         }
     }
-    if(sort==="status"){
+    if(sort==="status"){    //nach status sortieren.
         mJson.forEach(function(e){
             newOrder.push(e.status);
         });
@@ -219,6 +251,29 @@ function getMyJson(){   // sortierung vornehmen
         for(let i=0; myJson.length<mJson.length; i++){
             if(i>mJson.length-1){i=0;}
             if(mJson[i].status==newOrder[n]){
+                n++;
+                myJson.push(mJson[i]);
+                if(myJson.length<mJson.length){
+                i=0;}
+            }
+        }
+        if(order=="normal"){
+            return(myJson);
+        }else if(order== "reverse"){
+            myJson= myJson.reverse();
+            return(myJson);
+        }
+    }
+    if(sort==="color"){    //!nach color sortieren. Fehlerhaft. wenn Zeit übrig darum kümmern.
+        mJson.forEach(function(e){
+            newOrder.push(e.color);
+        });
+        newOrder.sort();
+        
+        let n=0;
+        for(let i=0; myJson.length<mJson.length; i++){
+            if(i>mJson.length-1){i=0;}
+            if(mJson[i].color==newOrder[n]){
                 n++;
                 myJson.push(mJson[i]);
                 if(myJson.length<mJson.length){

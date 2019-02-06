@@ -1,11 +1,37 @@
 body {
   font-family: sans-serif;
-  background-color: #d1d1d1; }
+  background-color: #d1d1d1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; }
+  body h1 {
+    background-image: linear-gradient(to right, white 30%, rgba(255, 255, 255, 0) 50%); }
+    body h1 span {
+      font-weight: bold;
+      font-size: 40px;
+      line-height: 1.5;
+      color: black; }
+    body h1 #digi {
+      color: #0075be;
+      font-size: 40px;
+      line-height: 1.5; }
+  body .rangepickercontainer {
+    margin-top: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center; }
+    body .rangepickercontainer .range #rangeform #startdate {
+      line-height: 20px; }
+    body .rangepickercontainer .range #rangeform #enddate {
+      line-height: 20px; }
   body .container {
     display: flex;
     width: 80%;
     margin-left: 10%;
-    flex-direction: column; }
+    flex-direction: column;
+    border: 1px solid black;
+    margin-top: 5px; }
     body .container .headerContainer {
       width: 100%;
       height: 40px;
@@ -19,7 +45,7 @@ body {
         text-align: center;
         vertical-align: middle;
         justify-content: center;
-        background-color: #00ffff;
+        background-color: #0075be;
         cursor: pointer;
         font-weight: bold; }
     body .container .maincontainer {
